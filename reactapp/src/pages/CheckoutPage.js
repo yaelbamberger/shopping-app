@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { clearCart } from '../features/cart/cartSlice';
 import { useNavigate } from 'react-router-dom';
 
-
 const CheckoutPage = () => {
   const items = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
@@ -32,24 +31,17 @@ const CheckoutPage = () => {
     try {
       const response = await fetch('http://localhost:4000/api/orders', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ ...formData, items })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, items }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`Server error: ${response.status}`);
 
       const { id } = await response.json();
       alert(`ההזמנה נשלחה בהצלחה! (ID: ${id})`);
-
       dispatch(clearCart());
       setFormData({ firstName: '', lastName: '', address: '', email: '' });
       navigate('/');
-
-
     } catch (err) {
       console.error('Error submitting order:', err);
       alert('אירעה שגיאה בשליחת ההזמנה. אנא נסי שוב.');
@@ -57,68 +49,90 @@ const CheckoutPage = () => {
   };
 
   if (items.length === 0) {
-    return <p>אין מוצרים להזמנה. אנא חזר/י לעמוד הקניות.</p>;
+    return <p style={{ direction: 'rtl', textAlign: 'right' }}>אין מוצרים להזמנה. אנא חזר/י לעמוד הקניות.</p>;
   }
 
   return (
-    <div>
-      <h1>סיכום ההזמנה</h1>
+    <div style={{ direction: 'rtl', padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
+      <h1 style={{ textAlign: 'center', color: '#2f68cb' }}>סיכום ההזמנה</h1>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>שם פרטי:</label>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <label>
+          שם פרטי:
           <input
             name="firstName"
             value={formData.firstName}
             onChange={handleChange}
             required
+            style={inputStyle}
           />
-        </div>
+        </label>
 
-        <div>
-          <label>שם משפחה:</label>
+        <label>
+          שם משפחה:
           <input
             name="lastName"
             value={formData.lastName}
             onChange={handleChange}
             required
+            style={inputStyle}
           />
-        </div>
+        </label>
 
-        <div>
-          <label>כתובת מלאה:</label>
+        <label>
+          כתובת מלאה:
           <input
             name="address"
             value={formData.address}
             onChange={handleChange}
             required
+            style={inputStyle}
           />
-        </div>
+        </label>
 
-        <div>
-          <label>מייל:</label>
+        <label>
+          מייל:
           <input
             name="email"
             type="email"
             value={formData.email}
             onChange={handleChange}
             required
+            style={inputStyle}
           />
-        </div>
+        </label>
 
         <h3>מוצרים בהזמנה:</h3>
-        <ul>
-          {items.map((item) => (
-            <li key={item.id}>
+        <ul style={{ background: '#f5f5f5', borderRadius: '8px', padding: '1rem' }}>
+          {items.map((item, index) => (
+            <li key={index} style={{ marginBottom: '0.5rem' }}>
               {item.name} ({item.category}) - כמות: {item.quantity}
             </li>
           ))}
         </ul>
 
-        <button type="submit">אשר הזמנה</button>
+        <button type="submit" style={buttonStyle}>אשר הזמנה</button>
       </form>
     </div>
   );
+};
+
+const inputStyle = {
+  width: '100%',
+  padding: '0.5rem',
+  marginTop: '0.25rem',
+  borderRadius: '6px',
+  border: '1px solid #ccc',
+};
+
+const buttonStyle = {
+  padding: '0.75rem',
+  backgroundColor: '#2f68cb',
+  color: 'white',
+  border: 'none',
+  borderRadius: '8px',
+  cursor: 'pointer',
+  fontWeight: 'bold',
 };
 
 export default CheckoutPage;
