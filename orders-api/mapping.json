@@ -1,0 +1,21 @@
+{
+    "mappings": {
+      "properties": {
+        "firstName":    { "type": "text" },
+        "lastName":     { "type": "text" },
+        "address":      { "type": "text" },
+        "email":        { "type": "keyword" },
+        "createdAt":    { "type": "date" },
+        "items": {
+          "type":       "nested",
+          "properties": {
+            "id":       { "type": "keyword" },
+            "name":     { "type": "text" },
+            "category": { "type": "keyword" },
+            "quantity": { "type": "integer" }
+          }
+        }
+      }
+    }
+  }
+  

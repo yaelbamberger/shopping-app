@@ -1,0 +1,19 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build
+bin/
+obj/
+
+# Node.js
+**/node_modules/
+
+# React build
+client/build
+
+# מערכת
+.DS_Store
+Thumbs.db
+.env
